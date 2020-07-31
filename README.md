@@ -9,7 +9,7 @@ ggplot2 is an R library function to plot
 
 ### Installation 
 Use install.package to install ggplot2
-```{r}
+```R
 install.package("ggplot2")
 ```
 ### Usage
