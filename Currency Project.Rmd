@@ -1,0 +1,74 @@
+---
+title: "Project"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Environment Setup:
+```{r}
+library(ggplot2)
+```
+Hypothesis: The value of a countries currency is correlated to the value of another countries currency based on trade relation between them.
+
+Data Set import:
+```{r}
+Currency=read.csv("C:\\Users\\nalin\\OneDrive\\Documents\\Exchange_Rate_Report_Refined.csv")
+Currency_Raw=read.csv("C:\\Users\\nalin\\OneDrive\\Documents\\Exchange_Rate_Report.csv")
+```
+
+Properties of the data set:
+```{r}
+dim(Currency_Raw)
+names(Currency_Raw)
+```
+```{r}
+names(Currency)
+head(Currency)
+```
+
+Importing WTO data set on total import and export for India(test country):
+
+```{r}
+Trade_Raw=read.csv("C:\\Users\\nalin\\OneDrive\\Documents\\WTO Refined DataSet-India.csv")
+
+```
+
+Previewing the data:
+```{r}
+dim(Trade_Raw)
+names(Trade_Raw)
+```
+Filtering the data for relevant information:
+```{r}
+keep=c("Year","Partner","Trade.Flow","Trade.Value..US..")
+Trade=subset(Trade_Raw, select = keep)
+```
+
+```{r}
+names(Trade)
+head(Trade)
+```
+
+
+Analyzing the Trade data through plots:
+
+```{r}
+ggplot(data=Trade, mapping=aes(x=Year,y=Trade.Value..US..,color=interaction(Partner,Trade.Flow)))+geom_point(alpha=0.7)+geom_line()+labs(y="Trade Value($)",x="Time")
+ggplot(data=Trade, mapping=aes(x=Year,y=Trade.Value..US..,color=Partner))+geom_smooth(method=loess,formula = y~x) +labs(y="Trade Value($)",x="Time")
+
+```
+
+Analyzing the Currency data through plots:
+```{r}
+ggplot(data=Currency,mapping=aes(x=Date,y=Value,color=Name))+geom_line()+labs(x="Year",y="Value of the currency equivalent to 1$")
+```
+
+Trying the estimate the correlation b/w change in Currency value and Trade Value
+```{r}
+curr.model=lm(formula=Indian.rupee....INR.~Canadian.dollar....CAD.+Chinese.yuan....CNY.+Danish.krone....DKK.+Euro....EUR.+Israeli.New.Shekel....ILS.+Japanese.yen....JPY.+Kuwaiti.dinar....KWD.+Malaysian.ringgit....MYR.+Mexican.peso....MXN.+Polish.zloty....PLN.+Russian.ruble....RUB.+Singapore.dollar....SGD.+Swedish.krona....SEK.+Thai.baht....THB.+U.K..pound....GBP.,data=Currency_Raw)
+summary(curr.model)
+
+```
